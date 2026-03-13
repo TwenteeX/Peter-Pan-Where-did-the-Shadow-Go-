@@ -1,0 +1,17 @@
+# Peter Pan — base framework (MVP)
+# Python 3.10+
+
+# Perception: camera and image processing
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# Config
+PyYAML>=6.0
+
+# Render Bridge: OSC
+python-osc>=1.8.0
+
+# Optional (uncomment for full pipeline):
+# open3d>=0.17.0
+# transformers>=4.30.0
+# openai>=1.0.0

@@ -1,0 +1,38 @@
+# Peter Pan — hardware-agnostic config (MVP / Phase 1–4)
+# Override only what you need; defaults are in peter_pan.config.loader.
+
+project:
+  name: "Peter Pan, Where did the Shadow Go?"
+  version: "0.1.0"
+
+# Perception Hub: camera and VLM
+perception:
+  camera_index: 0
+  image_width: 1280
+  image_height: 720
+  shadow:
+    method: background_subtraction  # or sam
+    threshold: 30
+  vlm:
+    provider: openai
+    model: gpt-4o
+    prompt: "Identify the object in this image and describe its key living attributes in one short phrase (e.g. a small white cat)."
+
+# World Engine (for later 3D)
+world_engine:
+  use_depth: false
+  voxel_size: 0.01
+
+# Agent Brain
+agent_brain:
+  provider: openai
+  model: gpt-4o
+
+# Render Bridge: OSC for UE/Unity/TouchDesigner
+render_bridge:
+  transport: osc
+  osc:
+    host: "127.0.0.1"
+    port: 7000
+  websocket:
+    url: "ws://127.0.0.1:8765"
