@@ -11,7 +11,12 @@ PyYAML>=6.0
 # Render Bridge: OSC
 python-osc>=1.8.0
 
+# VLM object/scene description (perception.vlm.enabled): needs OPENAI_API_KEY
+openai>=1.30.0
+
 # Optional (uncomment for full pipeline):
+# ultralytics>=8.2.0
+# SAM2 install example:
+# pip install git+https://github.com/facebookresearch/sam2.git
 # open3d>=0.17.0
 # transformers>=4.30.0
-# openai>=1.0.0

@@ -11,11 +11,43 @@ perception:
   image_width: 1280
   image_height: 720
   shadow:
-    method: background_subtraction  # or sam
+    # "background_subtraction" | "detector_yolo" | "detector_sam2"
+    method: detector_yolo
     threshold: 30
+    min_area: 100.0
+    detector:
+      model: yolov8n.pt
+      min_conf: 0.25
+      max_objects: 10
+    tracker:
+      enabled: true
+      # "bytetrack" (recommended) | "simple" (IoU+center-distance fallback)
+      backend: bytetrack
+      bytetrack_cfg: bytetrack.yaml
+      iou_threshold: 0.25
+      center_dist_px: 120.0
+      max_age_frames: 20
+    sam2:
+      # Fill these when using method: detector_sam2
+      # Example model_cfg: sam2_hiera_l.yaml
+      # Example checkpoint: C:/models/sam2_hiera_large.pt
+      device: cpu
+      model_cfg: "C:/Users/james/miniconda3/envs/shadowpan/Lib/site-packages/sam2/configs/sam2.1/sam2.1_hiera_l.yaml"
+      checkpoint: "C:/Users/james/Desktop/Peter-Pan-Where-did-the-Shadow-Go-/peter_pan/config/sam2.1_hiera_large.pt"
   vlm:
     provider: openai
-    model: gpt-4o
+    # Set enabled: true and export OPENAI_API_KEY for object/scene description (SemanticLabel).
+    enabled: True
+    # auto: periodic requests, manual: only when debug button / key [v] is pressed
+    trigger_mode: manual
+    interval_sec: 3.0
+    only_when_object_visible: true
+    use_largest_contour_crop: true
+    max_image_side: 1024
+    max_tokens: 200
+    # 按一次「多物體 VLM」時，最多送幾個 API（每個有效 track_id 各一次）
+    max_objects_per_batch: 10
+    model: gpt-4o-mini
     prompt: "Identify the object in this image and describe its key living attributes in one short phrase (e.g. a small white cat)."
 
 # World Engine (for later 3D)

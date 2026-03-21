@@ -58,11 +58,38 @@ def _default_config_dict() -> dict[str, Any]:
             "image_width": 1280,
             "image_height": 720,
             "shadow": {
-                "method": "background_subtraction",  # or "sam"
+                "method": "background_subtraction",  # "background_subtraction" | "detector_yolo" | "detector_sam2"
                 "threshold": 30,
+                "min_area": 100.0,
+                "detector": {
+                    "model": "yolov8n.pt",
+                    "min_conf": 0.25,
+                    "max_objects": 10,
+                },
+                "tracker": {
+                    "enabled": True,
+                    "backend": "bytetrack",  # "bytetrack" or "simple"
+                    "bytetrack_cfg": "bytetrack.yaml",
+                    "iou_threshold": 0.25,
+                    "center_dist_px": 120.0,
+                    "max_age_frames": 20,
+                },
+                "sam2": {
+                    "device": "cpu",
+                    "model_cfg": "",
+                    "checkpoint": "",
+                },
             },
             "vlm": {
                 "provider": "openai",  # or "huggingface", "local"
+                "enabled": False,
+                "trigger_mode": "auto",  # "auto" or "manual"
+                "interval_sec": 3.0,
+                "only_when_object_visible": True,
+                "use_largest_contour_crop": True,
+                "max_image_side": 1024,
+                "max_tokens": 200,
+                "max_objects_per_batch": 10,
                 "model": "gpt-4o",
                 "prompt": "Identify the object in this image and describe its key living attributes in one short phrase (e.g. a small white cat).",
             },
