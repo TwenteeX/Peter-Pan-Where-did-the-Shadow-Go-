@@ -1,0 +1,13 @@
+{
+  "decision_id": "dec_0007",
+  "high_level_action": "walk_to_waypoint",
+  "target_object": null,
+  "target_point": [580, 180],
+  "next_state": "walking",
+  "path": [[120, 640], [180, 610], [220, 560], [300, 400], [450, 280], [580, 180]],
+  "reason": "Move toward goal; path cost prefers shadow corridors when available.",
+  "meta": {
+    "rule_trace": ["P2/P3: walk_to_waypoint with shadow bias"],
+    "env_hash": "example_hash_0000"
+  }
+}

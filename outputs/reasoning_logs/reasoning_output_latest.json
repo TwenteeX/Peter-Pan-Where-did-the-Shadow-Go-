@@ -1,0 +1,91 @@
+{
+  "decision_id": "dec_0001",
+  "high_level_action": "walk_to_waypoint",
+  "target_object": null,
+  "target_point": [
+    580.0,
+    180.0
+  ],
+  "next_state": "walking",
+  "path": [
+    [
+      312.0,
+      408.0
+    ],
+    [
+      328.0,
+      392.0
+    ],
+    [
+      344.0,
+      376.0
+    ],
+    [
+      360.0,
+      360.0
+    ],
+    [
+      376.0,
+      344.0
+    ],
+    [
+      392.0,
+      328.0
+    ],
+    [
+      408.0,
+      312.0
+    ],
+    [
+      424.0,
+      296.0
+    ],
+    [
+      440.0,
+      280.0
+    ],
+    [
+      456.0,
+      264.0
+    ],
+    [
+      472.0,
+      264.0
+    ],
+    [
+      488.0,
+      264.0
+    ],
+    [
+      504.0,
+      264.0
+    ],
+    [
+      520.0,
+      248.0
+    ],
+    [
+      536.0,
+      232.0
+    ],
+    [
+      552.0,
+      216.0
+    ],
+    [
+      568.0,
+      200.0
+    ],
+    [
+      584.0,
+      184.0
+    ]
+  ],
+  "reason": "Move toward goal; path cost prefers shadow corridors when available.",
+  "meta": {
+    "rule_trace": [
+      "P2/P3: walk_to_waypoint with shadow bias"
+    ],
+    "env_hash": "611b376245079562"
+  }
+}

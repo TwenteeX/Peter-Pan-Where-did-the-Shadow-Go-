@@ -72,10 +72,35 @@ Hypersense/
 │   ├── world_engine/           # World Engine (stub + interface)
 │   ├── agent_brain/            # Agent Brain (simple + interface)
 │   └── render_bridge/          # OSC / WebSocket client
+├── examples/                   # Sample environment.json / reasoning_output.json
+├── docs/
+│   └── SPRINT_MVP.md           # Weekly sprint: shadow + reasoning chain
 └── scripts/
     ├── run_mvp_bridge.py       # Phase 4: perception → agent → OSC
-    └── …
+    ├── run_shadow_demo.py      # Sprint: camera → shadow → env → reasoning + viz
+    └── run_reasoning_offline.py
 ```
+
+---
+
+## Weekly Sprint — Shadow contour + reasoning agent (2D MVP)
+
+This iteration implements the PRD chain:
+
+**Camera frame → `shadow_detector` → `environment.json` → `RuleBasedReasoningAgent` → `reasoning_output.json` → OpenCV visualization.**
+
+- **Goal A (shadow)**: Lab luminance vs background, ROI mask, morphology, contours → polygon / bbox / centroid in **table coordinates**, JSON-serializable; debug panels (raw, mask, overlay, path).
+- **Goal B (agent)**: Deterministic **rule-based** planner (no LLM in the loop): priorities — edge safety → climbable books → shadow-biased A* paths. Behaviors include `walk_to_waypoint`, `avoid_edge`, `approach_book_edge`, `climb_book`, `wait_in_shadow`. Each decision logs to `outputs/reasoning_logs/`.
+
+```bash
+pip install -r requirements.txt
+# Live demo (press b = background, s = save JSON, q = quit)
+python -m scripts.run_shadow_demo
+# Reasoning only from examples
+python -m scripts.run_reasoning_offline examples/environment.json
+```
+
+Tune `shadow_detector` and `environment_builder` in `config.yaml` (table ROI, book polygons, agent start, goal). See `docs/SPRINT_MVP.md` for the flow diagram and checklist.
 
 ---
 
@@ -117,6 +142,7 @@ Hypersense/
 Edit `config.yaml` (or pass a path to `load_config()`). Important sections:
 
 - **perception**: `camera_index`, image size, `shadow.method` (e.g. `background_subtraction`), `vlm` provider/model/prompt.
+- **shadow_detector** / **environment_builder** / **reasoning_agent**: sprint 2D pipeline (ROI, thresholds, manual objects, planner margins).
 - **render_bridge**: `transport` (`osc` or `websocket`), `osc.host` / `osc.port` or `websocket.url`.
 
 Defaults live in `peter_pan.config.loader`; only override what you need.

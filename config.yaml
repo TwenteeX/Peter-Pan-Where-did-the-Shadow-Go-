@@ -36,3 +36,34 @@ render_bridge:
     port: 7000
   websocket:
     url: "ws://127.0.0.1:8765"
+
+# Sprint MVP — shadow contour (Goal A)
+shadow_detector:
+  # ROI in image pixels (adjust to your overhead camera crop)
+  table_roi: [[0, 0], [1280, 0], [1280, 720], [0, 720]]
+  table_boundary: [[0, 0], [640, 0], [640, 720], [0, 720]]
+  color_space: lab
+  darkness_threshold: 18
+  min_area_px: 800
+  max_regions: 3
+  morph_open_kernel: 3
+  morph_close_kernel: 7
+
+# 2D world + agent start / goal (manual books until detection lands)
+environment_builder:
+  table_boundary: [[0, 0], [640, 0], [640, 720], [0, 720]]
+  agent_start: [120, 640]
+  goal_position: [580, 180]
+  objects:
+    - id: book_1
+      type: book
+      polygon: [[250, 410], [360, 410], [360, 470], [250, 470]]
+      height_level: 1
+      affordance: [obstacle, standable, climbable]
+
+reasoning_agent:
+  edge_margin: 36
+  grid_step: 16
+  shadow_bias_weight: 12
+  climbable_margin: 22
+  log_dir: outputs/reasoning_logs

@@ -3,7 +3,7 @@
 
 # Perception: camera and image processing
 opencv-python>=4.8.0
-numpy>=1.24.0
+numpy>=1.24.0  # shadow debug + vector math in reasoning agent
 
 # Config
 PyYAML>=6.0

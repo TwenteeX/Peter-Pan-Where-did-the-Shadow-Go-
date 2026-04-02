@@ -1,0 +1,150 @@
+{
+  "timestamp": 1775101481.4005797,
+  "latency_ms": 137.09,
+  "input_environment": {
+    "timestamp": 1712102400.52,
+    "table_boundary": [
+      [
+        0,
+        0
+      ],
+      [
+        640,
+        0
+      ],
+      [
+        640,
+        720
+      ],
+      [
+        0,
+        720
+      ]
+    ],
+    "agent": {
+      "id": "peter",
+      "position": [
+        120,
+        640
+      ],
+      "heading": 0,
+      "state": "idle"
+    },
+    "goal": {
+      "type": "reach_platform",
+      "position": [
+        580,
+        180
+      ]
+    },
+    "objects": [
+      {
+        "id": "book_1",
+        "type": "book",
+        "polygon": [
+          [
+            250,
+            410
+          ],
+          [
+            360,
+            410
+          ],
+          [
+            360,
+            470
+          ],
+          [
+            250,
+            470
+          ]
+        ],
+        "height_level": 1,
+        "affordance": [
+          "obstacle",
+          "standable",
+          "climbable"
+        ]
+      }
+    ],
+    "shadow_regions": [
+      {
+        "id": "shadow_1",
+        "polygon": [
+          [
+            410,
+            210
+          ],
+          [
+            500,
+            260
+          ],
+          [
+            470,
+            330
+          ],
+          [
+            380,
+            300
+          ]
+        ],
+        "bbox": [
+          380,
+          210,
+          120,
+          120
+        ],
+        "centroid": [
+          445,
+          265
+        ],
+        "affordance": [
+          "preferred_zone",
+          "low_glare"
+        ]
+      }
+    ]
+  },
+  "output": {
+    "decision_id": "dec_0001",
+    "high_level_action": "avoid_edge",
+    "target_object": null,
+    "target_point": [
+      166.4990554975277,
+      574.9013223034613
+    ],
+    "next_state": "avoiding_edge",
+    "path": [
+      [
+        136.0,
+        648.0
+      ],
+      [
+        136.0,
+        632.0
+      ],
+      [
+        152.0,
+        616.0
+      ],
+      [
+        152.0,
+        600.0
+      ],
+      [
+        168.0,
+        584.0
+      ]
+    ],
+    "reason": "Agent is within edge margin; move inward for safety.",
+    "meta": {
+      "rule_trace": [
+        "P1: near_table_edge -> avoid_edge"
+      ],
+      "env_hash": "65531bb5bf863766"
+    }
+  },
+  "rule_trace": [
+    "P1: near_table_edge -> avoid_edge"
+  ]
+}
