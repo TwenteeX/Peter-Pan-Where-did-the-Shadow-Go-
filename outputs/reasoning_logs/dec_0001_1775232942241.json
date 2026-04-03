@@ -1,0 +1,243 @@
+{
+  "timestamp": 1775232942.2410147,
+  "latency_ms": 46.46,
+  "backend": "rules_fallback_no_key",
+  "input_environment": {
+    "timestamp": 1775232942.085158,
+    "table_boundary": [
+      [
+        0,
+        0
+      ],
+      [
+        640,
+        0
+      ],
+      [
+        640,
+        720
+      ],
+      [
+        0,
+        720
+      ]
+    ],
+    "agent": {
+      "id": "peter",
+      "position": [
+        120,
+        640
+      ],
+      "heading": 0.0,
+      "state": "idle"
+    },
+    "goal": {
+      "type": "reach_platform",
+      "position": [
+        580,
+        180
+      ]
+    },
+    "objects": [
+      {
+        "id": "book_1",
+        "type": "book",
+        "polygon": [
+          [
+            250,
+            410
+          ],
+          [
+            360,
+            410
+          ],
+          [
+            360,
+            470
+          ],
+          [
+            250,
+            470
+          ]
+        ],
+        "height_level": 1,
+        "affordance": [
+          "obstacle",
+          "standable",
+          "climbable"
+        ]
+      }
+    ],
+    "shadow_regions": [
+      {
+        "id": "shadow_1",
+        "polygon": [
+          [
+            639.5,
+            525.0
+          ],
+          [
+            619.5,
+            527.0
+          ],
+          [
+            612.0,
+            534.0
+          ],
+          [
+            584.5,
+            542.0
+          ],
+          [
+            571.5,
+            549.0
+          ],
+          [
+            568.5,
+            548.0
+          ],
+          [
+            553.0,
+            558.0
+          ],
+          [
+            540.5,
+            588.0
+          ],
+          [
+            528.0,
+            627.0
+          ],
+          [
+            526.0,
+            638.0
+          ],
+          [
+            522.0,
+            715.0
+          ],
+          [
+            519.5,
+            719.0
+          ],
+          [
+            639.5,
+            719.0
+          ]
+        ],
+        "bbox": [
+          519.5,
+          525.0,
+          120.0,
+          194.0
+        ],
+        "centroid": [
+          586.9102973162641,
+          633.8226302093549
+        ],
+        "affordance": [
+          "preferred_zone",
+          "low_glare"
+        ]
+      }
+    ],
+    "identity": {
+      "source_object_label": "a small white porcelain cat figurine",
+      "role_instruction": "You are the cat’s shadow given agency; curious, soft-footed, wary of bright open table center, comforted by shade.",
+      "persona_traits": [
+        "curious",
+        "cautious_near_edges",
+        "seeks_cool_shadow"
+      ]
+    },
+    "scene_relationships": {
+      "relations": [
+        {
+          "from": "shadow_agent",
+          "to": "book_1",
+          "relation": "potential_stairs",
+          "note": "Books are climbable but unfamiliar; approach with care."
+        },
+        {
+          "from": "shadow_agent",
+          "to": "shadow_regions",
+          "relation": "prefers",
+          "note": "Shadow pools feel safe when glare is harsh elsewhere."
+        }
+      ]
+    }
+  },
+  "output": {
+    "decision_id": "dec_0001",
+    "high_level_action": "approach_book_edge",
+    "target_object": "book_1",
+    "target_point": [
+      250.0,
+      470.0
+    ],
+    "next_state": "approach_edge",
+    "path": [
+      [
+        136.0,
+        648.0
+      ],
+      [
+        152.0,
+        632.0
+      ],
+      [
+        168.0,
+        616.0
+      ],
+      [
+        184.0,
+        600.0
+      ],
+      [
+        200.0,
+        584.0
+      ],
+      [
+        200.0,
+        568.0
+      ],
+      [
+        216.0,
+        552.0
+      ],
+      [
+        216.0,
+        536.0
+      ],
+      [
+        232.0,
+        520.0
+      ],
+      [
+        232.0,
+        504.0
+      ],
+      [
+        248.0,
+        488.0
+      ],
+      [
+        264.0,
+        472.0
+      ]
+    ],
+    "reason": "Approach book book_1 edge to climb toward goal.",
+    "meta": {
+      "rule_trace": [
+        "P2: approach climbable book edge"
+      ],
+      "env_hash": "d9278a82dd51561c",
+      "backend": "rules"
+    }
+  },
+  "rule_trace": [
+    "claude:messages_api",
+    "Missing Anthropic API key: set environment variable ANTHROPIC_API_KEY (recommended) or configure reasoning_agent.claude.api_key for local dev only.",
+    "fallback_to_rules"
+  ]
+}

@@ -7,7 +7,9 @@ project:
 
 # Perception Hub: camera and VLM
 perception:
-  camera_index: 0
+  # Camera device index: 0 is often the built-in webcam; USB cameras are usually 1, 2, …
+  # Run: python -m scripts.list_cameras   (see which index opens and shows non-black frames)
+  camera_index: 1
   image_width: 1280
   image_height: 720
   shadow:

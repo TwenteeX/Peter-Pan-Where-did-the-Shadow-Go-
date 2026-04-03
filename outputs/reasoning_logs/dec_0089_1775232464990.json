@@ -1,0 +1,243 @@
+{
+  "timestamp": 1775232464.9904315,
+  "latency_ms": 16.23,
+  "backend": "rules_fallback_no_key",
+  "input_environment": {
+    "timestamp": 1775232464.9470327,
+    "table_boundary": [
+      [
+        0,
+        0
+      ],
+      [
+        640,
+        0
+      ],
+      [
+        640,
+        720
+      ],
+      [
+        0,
+        720
+      ]
+    ],
+    "agent": {
+      "id": "peter",
+      "position": [
+        392.0,
+        632.0
+      ],
+      "heading": 0.0,
+      "state": "idle"
+    },
+    "goal": {
+      "type": "reach_platform",
+      "position": [
+        580,
+        180
+      ]
+    },
+    "objects": [
+      {
+        "id": "book_1",
+        "type": "book",
+        "polygon": [
+          [
+            250,
+            410
+          ],
+          [
+            360,
+            410
+          ],
+          [
+            360,
+            470
+          ],
+          [
+            250,
+            470
+          ]
+        ],
+        "height_level": 1,
+        "affordance": [
+          "obstacle",
+          "standable",
+          "climbable"
+        ]
+      }
+    ],
+    "shadow_regions": [],
+    "identity": {
+      "source_object_label": "a small white porcelain cat figurine",
+      "role_instruction": "You are the cat’s shadow given agency; curious, soft-footed, wary of bright open table center, comforted by shade.",
+      "persona_traits": [
+        "curious",
+        "cautious_near_edges",
+        "seeks_cool_shadow"
+      ]
+    },
+    "scene_relationships": {
+      "relations": [
+        {
+          "from": "shadow_agent",
+          "to": "book_1",
+          "relation": "potential_stairs",
+          "note": "Books are climbable but unfamiliar; approach with care."
+        },
+        {
+          "from": "shadow_agent",
+          "to": "shadow_regions",
+          "relation": "prefers",
+          "note": "Shadow pools feel safe when glare is harsh elsewhere."
+        }
+      ]
+    }
+  },
+  "output": {
+    "decision_id": "dec_0089",
+    "high_level_action": "walk_to_waypoint",
+    "target_object": null,
+    "target_point": [
+      580.0,
+      180.0
+    ],
+    "next_state": "walking",
+    "path": [
+      [
+        392.0,
+        648.0
+      ],
+      [
+        392.0,
+        632.0
+      ],
+      [
+        392.0,
+        616.0
+      ],
+      [
+        392.0,
+        600.0
+      ],
+      [
+        408.0,
+        584.0
+      ],
+      [
+        424.0,
+        568.0
+      ],
+      [
+        440.0,
+        552.0
+      ],
+      [
+        440.0,
+        536.0
+      ],
+      [
+        440.0,
+        520.0
+      ],
+      [
+        440.0,
+        504.0
+      ],
+      [
+        440.0,
+        488.0
+      ],
+      [
+        440.0,
+        472.0
+      ],
+      [
+        456.0,
+        456.0
+      ],
+      [
+        456.0,
+        440.0
+      ],
+      [
+        472.0,
+        424.0
+      ],
+      [
+        472.0,
+        408.0
+      ],
+      [
+        488.0,
+        392.0
+      ],
+      [
+        488.0,
+        376.0
+      ],
+      [
+        504.0,
+        360.0
+      ],
+      [
+        504.0,
+        344.0
+      ],
+      [
+        520.0,
+        328.0
+      ],
+      [
+        520.0,
+        312.0
+      ],
+      [
+        520.0,
+        296.0
+      ],
+      [
+        536.0,
+        280.0
+      ],
+      [
+        536.0,
+        264.0
+      ],
+      [
+        552.0,
+        248.0
+      ],
+      [
+        552.0,
+        232.0
+      ],
+      [
+        568.0,
+        216.0
+      ],
+      [
+        568.0,
+        200.0
+      ],
+      [
+        584.0,
+        184.0
+      ]
+    ],
+    "reason": "Move toward goal; path cost prefers shadow corridors when available.",
+    "meta": {
+      "rule_trace": [
+        "P2/P3: walk_to_waypoint with shadow bias"
+      ],
+      "env_hash": "13609d561044919f",
+      "backend": "rules"
+    }
+  },
+  "rule_trace": [
+    "claude:messages_api",
+    "Missing Anthropic API key: set environment variable ANTHROPIC_API_KEY (recommended) or configure reasoning_agent.claude.api_key for local dev only.",
+    "fallback_to_rules"
+  ]
+}

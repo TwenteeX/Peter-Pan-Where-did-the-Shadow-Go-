@@ -86,6 +86,14 @@ def draw_shadow_debug(
     else:
         mask_bgr = np.zeros(frame_bgr.shape, dtype=np.uint8) if np is not None else frame_bgr.copy()
 
+    # Bottom row must match mask_bgr (H,W); ROI crop can differ if ROI ≠ full frame — resize for hstack
+    if roi_crop.size == 0:
+        roi_panel = mask_bgr.copy()
+    elif roi_crop.shape[:2] != mask_bgr.shape[:2]:
+        roi_panel = cv2.resize(roi_crop, (mask_bgr.shape[1], mask_bgr.shape[0]), interpolation=cv2.INTER_LINEAR)
+    else:
+        roi_panel = roi_crop
+
     json_str = json.dumps(
         {k: v for k, v in detection.items() if k != "_debug"},
         ensure_ascii=False,
@@ -100,7 +108,7 @@ def draw_shadow_debug(
     composite = np.vstack(
         [
             np.hstack([frame_bgr, overlay]),
-            np.hstack([mask_bgr, roi_crop if roi_crop.size else mask_bgr]),
+            np.hstack([mask_bgr, roi_panel]),
         ]
     )
     return {"panels": {"raw": frame_bgr, "overlay": overlay, "mask": mask_bgr}, "composite": composite, "text": text_panel}

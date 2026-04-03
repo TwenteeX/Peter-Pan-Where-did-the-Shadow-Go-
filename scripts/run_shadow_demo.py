@@ -28,6 +28,17 @@ except ImportError:
     print("pip install opencv-python")
     raise
 
+
+def _open_video_capture(index: int):
+    """Windows: CAP_DSHOW avoids all-black frames with the default MSMF backend."""
+    if sys.platform == "win32":
+        cap = cv2.VideoCapture(index, cv2.CAP_DSHOW)
+        if cap.isOpened():
+            return cap
+        cap.release()
+    return cv2.VideoCapture(index)
+
+
 from peter_pan.perception.shadow_detector import ShadowDetector
 from peter_pan.perception.environment_builder import (
     build_environment,
@@ -64,10 +75,21 @@ def main() -> None:
     args = ap.parse_args()
 
     cfg = load_config()
-    cap_idx = int(cfg.get("perception", {}).get("camera_index", 0))
-    cap = cv2.VideoCapture(cap_idx)
+    perc = cfg.get("perception", {})
+    cap_idx = int(perc.get("camera_index", 0))
+    cap = _open_video_capture(cap_idx)
     if not cap.isOpened():
         raise RuntimeError(f"Cannot open camera {cap_idx}")
+    # Request size (many drivers ignore this; still helps on some USB cams)
+    iw = int(perc.get("image_width", 0) or 0)
+    ih = int(perc.get("image_height", 0) or 0)
+    if iw > 0:
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, iw)
+    if ih > 0:
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, ih)
+    # Warm up: first frames are often black or stale on Windows
+    for _ in range(15):
+        cap.read()
 
     det = ShadowDetector(config=cfg)
     agent = create_reasoning_agent(cfg)
@@ -90,12 +112,22 @@ def main() -> None:
     last_reasoning = None
     fps_t = time.time()
     nframes = 0
+    warned_dark = False
 
     while True:
         ok, frame = cap.read()
         if not ok:
             break
         nframes += 1
+        if nframes == 5 and frame is not None and frame.size:
+            m = float(frame.mean())
+            if m < 2.0 and not warned_dark:
+                warned_dark = True
+                print(
+                    "[WARN] Camera frame is almost black (mean pixel ~{:.1f}). "
+                    "On Windows try: perception.camera_index: 1 (different camera), "
+                    "or ensure no lens cap / use another app to verify the webcam.".format(m)
+                )
 
         try:
             raw = det.detect(frame)
