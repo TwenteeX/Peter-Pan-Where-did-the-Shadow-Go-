@@ -90,7 +90,9 @@ This iteration implements the PRD chain:
 **Camera frame → `shadow_detector` → `environment.json` → `RuleBasedReasoningAgent` → `reasoning_output.json` → OpenCV visualization.**
 
 - **Goal A (shadow)**: Lab luminance vs background, ROI mask, morphology, contours → polygon / bbox / centroid in **table coordinates**, JSON-serializable; debug panels (raw, mask, overlay, path).
-- **Goal B (agent)**: Deterministic **rule-based** planner (no LLM in the loop): priorities — edge safety → climbable books → shadow-biased A* paths. Behaviors include `walk_to_waypoint`, `avoid_edge`, `approach_book_edge`, `climb_book`, `wait_in_shadow`. Each decision logs to `outputs/reasoning_logs/`.
+- **Goal B (agent)**:
+  - **`reasoning_agent.backend: rules`** — deterministic geometry planner (edge safety → climbable books → shadow-biased A*).
+  - **`reasoning_agent.backend: claude`** — **Anthropic Claude** reads the full `environment` JSON (including **`identity`**, **`scene_relationships`**, **`semantic_context`**) under a **role prompt** (`config/role_prompt_shadow.txt` or inline `reasoning_agent.claude.role_prompt`). It must return the same structured JSON as before, plus optional **`meta.generation_hints`** for downstream rendering. Set **`ANTHROPIC_API_KEY`** (see `.env.example`). If the key is missing or the API/JSON parse fails and **`fallback_to_rules: true`**, the code falls back to the rule engine.
 
 ```bash
 pip install -r requirements.txt

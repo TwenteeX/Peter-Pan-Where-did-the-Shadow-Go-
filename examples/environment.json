@@ -1,5 +1,20 @@
 {
   "timestamp": 1712102400.52,
+  "identity": {
+    "source_object_label": "a small white porcelain cat figurine",
+    "role_instruction": "You are the cat's shadow; curious, soft-footed, wary of glare.",
+    "persona_traits": ["curious", "cautious_near_edges", "seeks_cool_shadow"]
+  },
+  "scene_relationships": {
+    "relations": [
+      {
+        "from": "shadow_agent",
+        "to": "book_1",
+        "relation": "potential_stairs",
+        "note": "Climbable toward the goal when brave enough."
+      }
+    ]
+  },
   "table_boundary": [[0, 0], [640, 0], [640, 720], [0, 720]],
   "agent": {
     "id": "peter",

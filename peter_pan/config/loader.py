@@ -102,13 +102,25 @@ def _default_config_dict() -> dict[str, Any]:
             "objects": [],
             "agent_start": [120.0, 640.0],
             "goal_position": [580.0, 180.0],
+            "identity": {},
+            "scene_relationships": {},
+            "semantic_context": {},
         },
         "reasoning_agent": {
+            "backend": "rules",
+            "fallback_to_rules": True,
             "edge_margin": 36.0,
             "grid_step": 16.0,
             "shadow_bias_weight": 12.0,
             "climbable_margin": 22.0,
             "log_dir": "outputs/reasoning_logs",
+            "claude": {
+                "model": "claude-sonnet-4-20250514",
+                "max_tokens": 2048,
+                "api_key_env": "ANTHROPIC_API_KEY",
+                "role_prompt_file": "config/role_prompt_shadow.txt",
+                "role_prompt": "",
+            },
         },
     }
 

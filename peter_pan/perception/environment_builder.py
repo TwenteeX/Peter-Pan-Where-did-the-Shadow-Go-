@@ -69,7 +69,7 @@ def build_environment(
     elif sd.get("table_boundary"):
         table_boundary = sd["table_boundary"]
 
-    env = {
+    env: dict[str, Any] = {
         "timestamp": ts,
         "table_boundary": table_boundary,
         "agent": {
@@ -85,6 +85,13 @@ def build_environment(
         "objects": list(objects if objects is not None else eb.get("objects", [])),
         "shadow_regions": _shadow_regions_for_env(shadow_detection.get("shadow_regions", [])),
     }
+    # Rich context for Claude / narrative reasoning (identity, persona, relationships)
+    if eb.get("identity"):
+        env["identity"] = eb["identity"]
+    if eb.get("scene_relationships") is not None:
+        env["scene_relationships"] = eb["scene_relationships"]
+    if eb.get("semantic_context"):
+        env["semantic_context"] = eb["semantic_context"]
     return env
 
 

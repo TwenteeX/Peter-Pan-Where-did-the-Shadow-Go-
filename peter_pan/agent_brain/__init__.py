@@ -7,5 +7,13 @@ Output: Structured action intents (e.g. climb, move_to).
 from .interface import AgentBrainInterface
 from .simple_agent import SimpleAgent
 from .reasoning_agent import RuleBasedReasoningAgent
+from .claude_reasoning_agent import ClaudeReasoningAgent
+from .reasoning_factory import create_reasoning_agent
 
-__all__ = ["AgentBrainInterface", "SimpleAgent", "RuleBasedReasoningAgent"]
+__all__ = [
+    "AgentBrainInterface",
+    "SimpleAgent",
+    "RuleBasedReasoningAgent",
+    "ClaudeReasoningAgent",
+    "create_reasoning_agent",
+]

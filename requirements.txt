@@ -11,6 +11,9 @@ PyYAML>=6.0
 # Render Bridge: OSC
 python-osc>=1.8.0
 
+# Claude reasoning (reasoning_agent.backend: claude)
+anthropic>=0.40.0
+
 # Optional (uncomment for full pipeline):
 # open3d>=0.17.0
 # transformers>=4.30.0

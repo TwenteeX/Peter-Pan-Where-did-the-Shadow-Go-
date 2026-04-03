@@ -6,7 +6,6 @@ Deterministic JSON output; no LLM in closed loop.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 import time
@@ -17,6 +16,8 @@ from typing import Any, Optional
 import heapq
 
 from peter_pan.config import load_config
+
+from .reasoning_common import env_hash, save_reasoning_output_file, write_reasoning_log
 
 
 @dataclass
@@ -48,8 +49,8 @@ class RuleBasedReasoningAgent:
         self._decision_counter += 1
         return f"dec_{self._decision_counter:04d}"
 
-    def decision(self, env: dict[str, Any]) -> dict[str, Any]:
-        """Single planning step; returns PRD reasoning_output dict."""
+    def decision(self, env: dict[str, Any], *, log: bool = True) -> dict[str, Any]:
+        """Single planning step; returns PRD reasoning_output dict. Set log=False when a wrapper logs."""
         t0 = time.time()
         table = env.get("table_boundary", [[0, 0], [640, 0], [640, 720], [0, 720]])
         tx0 = min(p[0] for p in table)
@@ -86,7 +87,8 @@ class RuleBasedReasoningAgent:
                 "Agent is within edge margin; move inward for safety.",
                 rule_trace,
             )
-            self._log(env, out, rule_trace, t0)
+            if log:
+                self._log(env, out, rule_trace, t0)
             return out
 
         # Priority 1b: wait in shadow if already inside shadow and goal achieved (optional)
@@ -102,7 +104,8 @@ class RuleBasedReasoningAgent:
                 "Near goal inside shadow preferred zone; hold position.",
                 rule_trace,
             )
-            self._log(env, out, rule_trace, t0)
+            if log:
+                self._log(env, out, rule_trace, t0)
             return out
 
         # Priority 2: climbable book if blocking path
@@ -131,7 +134,8 @@ class RuleBasedReasoningAgent:
                         f"{book.get('id')} is climbable and advances toward goal.",
                         rule_trace,
                     )
-                    self._log(env, out, rule_trace, t0)
+                    if log:
+                        self._log(env, out, rule_trace, t0)
                     return out
                 rule_trace.append("P2: approach climbable book edge")
                 path = self._astar(pos, edge_pt, (tx0, ty0, tx1, ty1), obstacles, shadow_polys, goal)
@@ -145,7 +149,8 @@ class RuleBasedReasoningAgent:
                     f"Approach book {book.get('id')} edge to climb toward goal.",
                     rule_trace,
                 )
-                self._log(env, out, rule_trace, t0)
+                if log:
+                    self._log(env, out, rule_trace, t0)
                 return out
 
         # Default: walk toward goal with shadow preference in A*
@@ -161,7 +166,8 @@ class RuleBasedReasoningAgent:
             "Move toward goal; path cost prefers shadow corridors when available.",
             rule_trace,
         )
-        self._log(env, out, rule_trace, t0)
+        if log:
+            self._log(env, out, rule_trace, t0)
         return out
 
     def _pack(
@@ -185,34 +191,25 @@ class RuleBasedReasoningAgent:
             "reason": reason,
             "meta": {
                 "rule_trace": rule_trace,
-                "env_hash": self._env_hash(env),
+                "env_hash": env_hash(env),
+                "backend": "rules",
             },
         }
-
-    def _env_hash(self, env: dict) -> str:
-        s = json.dumps(env, sort_keys=True, ensure_ascii=True)
-        return hashlib.sha256(s.encode()).hexdigest()[:16]
 
     def _log(self, env: dict, out: dict, rule_trace: list[str], t0: float) -> None:
         """NFR-B3: debug log."""
         log_dir = self._yaml.get("reasoning_agent", {}).get("log_dir", "outputs/reasoning_logs")
-        Path(log_dir).mkdir(parents=True, exist_ok=True)
-        name = f"{out['decision_id']}_{int(time.time() * 1000)}.json"
-        rec = {
-            "timestamp": time.time(),
-            "latency_ms": round((time.time() - t0) * 1000, 2),
-            "input_environment": env,
-            "output": out,
-            "rule_trace": rule_trace,
-        }
-        Path(log_dir, name).write_text(json.dumps(rec, ensure_ascii=False, indent=2), encoding="utf-8")
-        # also latest
-        Path(log_dir, "reasoning_output_latest.json").write_text(
-            json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8"
+        write_reasoning_log(
+            env,
+            out,
+            rule_trace,
+            t0,
+            log_dir=log_dir,
+            backend="rules",
         )
 
     def save_reasoning_output(self, out: dict[str, Any], path: str | Path) -> None:
-        Path(path).write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+        save_reasoning_output_file(out, path)
 
     # --- geometry helpers ---
 

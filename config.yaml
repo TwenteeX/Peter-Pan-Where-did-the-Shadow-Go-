@@ -60,10 +60,35 @@ environment_builder:
       polygon: [[250, 410], [360, 410], [360, 470], [250, 470]]
       height_level: 1
       affordance: [obstacle, standable, climbable]
+  # Narrative + Claude: who the shadow “is”, how to role-play, relations to props
+  identity:
+    source_object_label: "a small white porcelain cat figurine"
+    role_instruction: "You are the cat’s shadow given agency; curious, soft-footed, wary of bright open table center, comforted by shade."
+    persona_traits: [curious, cautious_near_edges, seeks_cool_shadow]
+  scene_relationships:
+    relations:
+      - from: shadow_agent
+        to: book_1
+        relation: potential_stairs
+        note: "Books are climbable but unfamiliar; approach with care."
+      - from: shadow_agent
+        to: shadow_regions
+        relation: prefers
+        note: "Shadow pools feel safe when glare is harsh elsewhere."
 
 reasoning_agent:
+  # rules = fast local geometry only | claude = Anthropic API + role prompt (needs ANTHROPIC_API_KEY)
+  backend: claude
+  fallback_to_rules: true
   edge_margin: 36
   grid_step: 16
   shadow_bias_weight: 12
   climbable_margin: 22
   log_dir: outputs/reasoning_logs
+  claude:
+    model: claude-sonnet-4-20250514
+    max_tokens: 2048
+    api_key_env: ANTHROPIC_API_KEY
+    role_prompt_file: config/role_prompt_shadow.txt
+    # role_prompt: |   # optional inline override of role_prompt_file
+    #   Your inline role text...

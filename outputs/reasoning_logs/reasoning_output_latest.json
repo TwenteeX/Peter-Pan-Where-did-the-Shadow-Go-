@@ -86,6 +86,7 @@
     "rule_trace": [
       "P2/P3: walk_to_waypoint with shadow bias"
     ],
-    "env_hash": "611b376245079562"
+    "env_hash": "4602ff03a9d5a920",
+    "backend": "rules"
   }
 }

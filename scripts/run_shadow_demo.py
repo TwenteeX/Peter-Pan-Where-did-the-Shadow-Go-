@@ -35,7 +35,7 @@ from peter_pan.perception.environment_builder import (
     EnvironmentBuilderDefaults,
 )
 from peter_pan.perception.shadow_debug import draw_shadow_debug
-from peter_pan.agent_brain.reasoning_agent import RuleBasedReasoningAgent
+from peter_pan.agent_brain.reasoning_factory import create_reasoning_agent
 from peter_pan.config import load_config
 
 
@@ -70,7 +70,7 @@ def main() -> None:
         raise RuntimeError(f"Cannot open camera {cap_idx}")
 
     det = ShadowDetector(config=cfg)
-    agent = RuleBasedReasoningAgent(config=cfg)
+    agent = create_reasoning_agent(cfg)
     out_dir = Path("outputs")
     out_dir.mkdir(parents=True, exist_ok=True)
 
