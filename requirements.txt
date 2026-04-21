@@ -12,7 +12,7 @@ PyYAML>=6.0
 python-osc>=1.8.0
 
 # VLM object/scene description (perception.vlm.enabled): needs OPENAI_API_KEY
-openai>=1.30.0
+openai>=1.76.0
 
 # Optional (uncomment for full pipeline):
 # ultralytics>=8.2.0

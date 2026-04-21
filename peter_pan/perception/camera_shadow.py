@@ -46,14 +46,22 @@ class CameraShadowPerception(PerceptionHubInterface):
         self._detector_refiner: Optional[DetectorSAM2Refiner] = None
         self._detector_yolo: Optional[DetectorYOLO] = None
         self._vlm_semantics_by_track: Dict[int, SemanticLabel] = {}
+        self._sam2_pending = False
 
     def start_stream(self) -> None:
         if cv2 is None:
             raise RuntimeError("OpenCV is required: pip install opencv-python")
-        idx = self.config.get("perception", {}).get("camera_index", 0)
+        perception_cfg = self.config.get("perception", {})
+        idx = perception_cfg.get("camera_index", 0)
         self._cap = cv2.VideoCapture(int(idx))
         if not self._cap.isOpened():
             raise RuntimeError(f"Cannot open camera index {idx}")
+        width = int(perception_cfg.get("image_width", 0) or 0)
+        height = int(perception_cfg.get("image_height", 0) or 0)
+        if width > 0:
+            self._cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        if height > 0:
+            self._cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
         # Capture initial background (no object)
         _, frame = self._cap.read()
         if frame is not None:
@@ -169,7 +177,11 @@ class CameraShadowPerception(PerceptionHubInterface):
             self._detector_refiner = DetectorSAM2Refiner(
                 self.config.get("perception", {}).get("shadow", {})
             )
-        result = self._detector_refiner.predict(frame_bgr)
+        run_sam = False
+        if self._sam2_pending:
+            self._sam2_pending = False
+            run_sam = True
+        result = self._detector_refiner.predict(frame_bgr, run_sam=run_sam)
         return (
             result["shadow_mask"],
             bool(result["object_visible"]),
@@ -271,6 +283,10 @@ class CameraShadowPerception(PerceptionHubInterface):
     def snapshot_vlm_semantics_by_track(self) -> Dict[int, SemanticLabel]:
         with self._vlm_lock:
             return dict(self._vlm_semantics_by_track)
+
+    def request_sam2_once(self) -> None:
+        """Next frame with method detector_sam2 will run SAM2 once (if ready)."""
+        self._sam2_pending = True
 
     def request_vlm_for_all_tracked_objects(
         self,

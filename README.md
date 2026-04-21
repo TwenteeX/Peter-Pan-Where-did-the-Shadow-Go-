@@ -119,8 +119,48 @@ Edit `config.yaml` (or pass a path to `load_config()`). Important sections:
 
 - **perception**: `camera_index`, image size, `shadow.method` (`background_subtraction`, `detector_yolo`, or `detector_sam2`), `vlm` provider/model/prompt, `vlm.max_objects_per_batch` (Phase 2 多物體 VLM 上限)。
 - **render_bridge**: `transport` (`osc` or `websocket`), `osc.host` / `osc.port` or `websocket.url`.
+- **world_engine.plane_space.homography**: camera pixels -> projected plane mapping. Use the calibration command below instead of typing points by hand.
 
 Defaults live in `peter_pan.config.loader`; only override what you need.
+
+---
+
+## Projector / Camera Calibration
+
+To let the camera know where the projected plane is, run the calibration target on the projector and click its four corners in the camera preview:
+
+```bash
+python -m scripts.calibrate_projector_plane --list-monitors
+python -m scripts.calibrate_projector_plane --monitor 1 --fullscreen
+```
+
+Click in this order: top-left, top-right, bottom-right, bottom-left, then press `s`. The script writes `world_engine.plane_space.homography.image_points` to `config.yaml` and keeps a `config.yaml.bak` backup.
+
+For the direct wall projector window, prefer monitor selection over guessing x offsets:
+
+```bash
+python -m scripts.run_uv_wall_projection --list-monitors
+python -m scripts.run_uv_wall_projection --preview --monitor 1 --fullscreen
+```
+
+If the OS reports the projector as the only monitor, `--monitor 0 --fullscreen` is correct.
+
+## Sora Video Shadow Pipeline
+
+The reusable implementation lives in `peter_pan.generation.sora_video`. Local smoke test without API calls:
+
+```bash
+python -m scripts.test_sora_video_threshold_mask --max-frames 12
+```
+
+Full interactive path:
+
+```bash
+$env:OPENAI_API_KEY="..."
+python -m scripts.demo_sora_llm_agent --preview --generate-sora
+```
+
+Without `--generate-sora`, the same demo uses a synthetic local video so you can test threshold masks and plane-space playback before spending API time.
 
 ---
 

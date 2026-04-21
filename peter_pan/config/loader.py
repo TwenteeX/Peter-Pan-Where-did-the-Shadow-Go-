@@ -78,6 +78,8 @@ def _default_config_dict() -> dict[str, Any]:
                     "device": "cpu",
                     "model_cfg": "",
                     "checkpoint": "",
+                    "run_each_frame": False,
+                    "max_objects_per_sam_pass": 10,
                 },
             },
             "vlm": {
@@ -97,10 +99,31 @@ def _default_config_dict() -> dict[str, Any]:
         "world_engine": {
             "use_depth": False,
             "voxel_size": 0.01,
+            "plane_space": {
+                "follow_detection": False,
+                "nudge_step": 0.02,
+                "physical_extent_cm": [60.0, 40.0],
+                "homography": {
+                    "enabled": False,
+                    "image_points": [],
+                    "plane_points": [],
+                },
+            },
         },
         "agent_brain": {
             "provider": "openai",
-            "model": "gpt-4o",
+            "model": "gpt-4o-mini",
+            "interval_sec": 3.0,
+            "max_image_side": 512,
+            "max_tokens": 300,
+            "system_prompt": (
+                "你是一個影子角色，活在一個 {w}x{h} cm 的平面空間裡。\n"
+                "你的位置以 (offset_x_cm, offset_y_cm) 表示，原點在擷取時的位置。\n"
+                "正 x = 右，正 y = 下。\n"
+                "根據照片裡的物體與環境，決定你下一步要怎麼移動。\n"
+                "只回覆一個 JSON 物件（不要 markdown）：\n"
+                '{{"dx_cm": float, "dy_cm": float, "duration_sec": float, "reason": "簡短說明"}}'
+            ),
         },
         "render_bridge": {
             "transport": "osc",
