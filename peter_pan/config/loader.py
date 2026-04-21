@@ -58,11 +58,40 @@ def _default_config_dict() -> dict[str, Any]:
             "image_width": 1280,
             "image_height": 720,
             "shadow": {
-                "method": "background_subtraction",  # or "sam"
+                "method": "background_subtraction",  # "background_subtraction" | "detector_yolo" | "detector_sam2"
                 "threshold": 30,
+                "min_area": 100.0,
+                "detector": {
+                    "model": "yolov8n.pt",
+                    "min_conf": 0.25,
+                    "max_objects": 10,
+                },
+                "tracker": {
+                    "enabled": True,
+                    "backend": "bytetrack",  # "bytetrack" or "simple"
+                    "bytetrack_cfg": "bytetrack.yaml",
+                    "iou_threshold": 0.25,
+                    "center_dist_px": 120.0,
+                    "max_age_frames": 20,
+                },
+                "sam2": {
+                    "device": "cpu",
+                    "model_cfg": "",
+                    "checkpoint": "",
+                    "run_each_frame": False,
+                    "max_objects_per_sam_pass": 10,
+                },
             },
             "vlm": {
                 "provider": "openai",  # or "huggingface", "local"
+                "enabled": False,
+                "trigger_mode": "auto",  # "auto" or "manual"
+                "interval_sec": 3.0,
+                "only_when_object_visible": True,
+                "use_largest_contour_crop": True,
+                "max_image_side": 1024,
+                "max_tokens": 200,
+                "max_objects_per_batch": 10,
                 "model": "gpt-4o",
                 "prompt": "Identify the object in this image and describe its key living attributes in one short phrase (e.g. a small white cat).",
             },
@@ -70,10 +99,31 @@ def _default_config_dict() -> dict[str, Any]:
         "world_engine": {
             "use_depth": False,
             "voxel_size": 0.01,
+            "plane_space": {
+                "follow_detection": False,
+                "nudge_step": 0.02,
+                "physical_extent_cm": [60.0, 40.0],
+                "homography": {
+                    "enabled": False,
+                    "image_points": [],
+                    "plane_points": [],
+                },
+            },
         },
         "agent_brain": {
             "provider": "openai",
-            "model": "gpt-4o",
+            "model": "gpt-4o-mini",
+            "interval_sec": 3.0,
+            "max_image_side": 512,
+            "max_tokens": 300,
+            "system_prompt": (
+                "你是一個影子角色，活在一個 {w}x{h} cm 的平面空間裡。\n"
+                "你的位置以 (offset_x_cm, offset_y_cm) 表示，原點在擷取時的位置。\n"
+                "正 x = 右，正 y = 下。\n"
+                "根據照片裡的物體與環境，決定你下一步要怎麼移動。\n"
+                "只回覆一個 JSON 物件（不要 markdown）：\n"
+                '{{"dx_cm": float, "dy_cm": float, "duration_sec": float, "reason": "簡短說明"}}'
+            ),
         },
         "render_bridge": {
             "transport": "osc",

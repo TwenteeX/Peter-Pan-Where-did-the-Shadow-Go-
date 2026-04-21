@@ -1,0 +1,10 @@
+sam2.1_hiera_large.pt
+yolov8n.pt
+assets/
+config.yaml
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
